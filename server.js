@@ -12,12 +12,13 @@ const logHelloWorld = (req, res, next) => {
   next();
 };
 
+app.set('view engine', 'ejs');
+
 app.get('/', (req, res) => {
-  const user = {
-    id: 1,
-    name: 'Nibras Alyassar',
-  };
-  res.json(user);
+  res.render('pages/index', {
+    title: 'Halaman utama',
+    username: 'Nibras',
+  });
 });
 
 app.get('/about', (req, res) => {
