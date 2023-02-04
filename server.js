@@ -7,6 +7,11 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const logHelloWorld = (req, res, next) => {
+  console.log('Hello World');
+  next();
+};
+
 app.get('/', (req, res) => {
   const user = {
     id: 1,
@@ -18,6 +23,8 @@ app.get('/', (req, res) => {
 app.get('/about', (req, res) => {
   res.redirect('https://expressjs.com/');
 });
+
+app.use(logHelloWorld);
 
 app.use(userRouter);
 
