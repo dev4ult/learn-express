@@ -1,5 +1,10 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const mongoose = require('mongoose');
+
+mongoose.set('strictQuery', false);
+mongoose.connect('mongodb://127.0.0.1:27017/nodejs').catch((err) => console.log(err));
+
 const userRouter = require('./router/users');
 const app = express();
 const port = 3000;
@@ -7,11 +12,6 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-
-const logHelloWorld = (req, res, next) => {
-  console.log('Hello World');
-  next();
-};
 
 app.set('view engine', 'ejs');
 
@@ -27,8 +27,6 @@ app.get('/about', (req, res) => {
     title: 'Halaman about',
   });
 });
-
-app.use(logHelloWorld);
 
 app.use(userRouter);
 

@@ -1,20 +1,15 @@
 const { readFileSync, writeFileSync } = require('fs');
+const userModel = require('../model/user_m');
 
 const file = './data/users.json';
 
-function getUsers() {
-  return JSON.parse(readFileSync(file, 'utf-8'));
-}
-
-function mapUID() {
-  return getUsers().map((user) => user.id);
-}
-
 module.exports = {
   index: (req, res) => {
-    const users = getUsers();
-    res.render('users/index', { users, title: 'List user' });
+    userModel.readAllUser().then((users) => {
+      res.render('users/index', { users, title: 'List User' });
+    });
   },
+
   detail: (req, res) => {
     const users = getUsers();
     const paramsUID = parseInt(req.params.uid);
@@ -26,23 +21,17 @@ module.exports = {
       res.sendStatus(404);
     }
   },
+
   form_add: (req, res) => {
     res.render('users/form_add', { title: 'Halaman Tambah User' });
   },
+
   add: (req, res) => {
-    const users = getUsers();
-    const userLastId = users[users.length - 1].id;
-    users.push({ id: userLastId + 1, ...req.body });
-    // res.json({
-    //   status: true,
-    //   data: users,
-    //   message: 'A new user has been added',
-    //   method: req.method,
-    //   url: req.url,
-    // });
-    writeFileSync(file, JSON.stringify(users));
+    const { nama, email } = req.body;
+    userModel.insertOneUser(nama, email);
     res.redirect('/users');
   },
+
   update: (req, res) => {
     const id = req.params.userId;
     const users = getUsers();
@@ -62,6 +51,7 @@ module.exports = {
       res.json(users);
     }
   },
+
   delete: (req, res) => {
     const id = req.params.uid;
     let users = getUsers();
