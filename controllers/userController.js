@@ -1,5 +1,4 @@
 const { readFileSync, writeFileSync } = require('fs');
-const { param } = require('../router/users');
 
 const file = './data/users.json';
 
