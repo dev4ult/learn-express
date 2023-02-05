@@ -10,7 +10,11 @@ const logParams = (req, res, next) => {
 
 router.route('/users').get(userController.index).post(userController.add);
 
+router.get('/users/detail/:uid', userController.detail);
+
 router.use(logParams);
+
+router.get('/users/form_add', userController.form_add);
 router.put('/users/:userId', userController.update);
 
 router.delete('/users/:uid', userController.delete);

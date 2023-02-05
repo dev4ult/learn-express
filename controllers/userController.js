@@ -1,40 +1,52 @@
 const { readFileSync, writeFileSync } = require('fs');
+const { param } = require('../router/users');
 
 const file = './data/users.json';
 
+function getUsers() {
+  return JSON.parse(readFileSync(file, 'utf-8'));
+}
+
+function mapUID() {
+  return getUsers().map((user) => user.id);
+}
+
 module.exports = {
   index: (req, res) => {
-    const users = JSON.parse(readFileSync(file, 'utf-8'));
-    if (users.length > 0) {
-      res.json({
-        status: true,
-        data: users,
-        method: req.method,
-        url: req.url,
-      });
+    const users = getUsers();
+    res.render('users/index', { users, title: 'List user' });
+  },
+  detail: (req, res) => {
+    const users = getUsers();
+    const paramsUID = parseInt(req.params.uid);
+    if (mapUID().includes(paramsUID)) {
+      const user = users.filter((user) => user.id == paramsUID)[0];
+      console.log(user);
+      res.render('users/detail', { ...user, title: 'Detail User' });
     } else {
-      res.json({
-        status: false,
-        message: 'User not found',
-      });
+      res.sendStatus(404);
     }
   },
+  form_add: (req, res) => {
+    res.render('users/form_add', { title: 'Halaman Tambah User' });
+  },
   add: (req, res) => {
-    const users = JSON.parse(readFileSync(file, 'utf-8'));
+    const users = getUsers();
     const userLastId = users[users.length - 1].id;
     users.push({ id: userLastId + 1, ...req.body });
-    res.json({
-      status: true,
-      data: users,
-      message: 'A new user has been added',
-      method: req.method,
-      url: req.url,
-    });
+    // res.json({
+    //   status: true,
+    //   data: users,
+    //   message: 'A new user has been added',
+    //   method: req.method,
+    //   url: req.url,
+    // });
     writeFileSync(file, JSON.stringify(users));
+    res.redirect('/users');
   },
   update: (req, res) => {
     const id = req.params.userId;
-    const users = JSON.parse(readFileSync(file, 'utf-8'));
+    const users = getUsers();
     const usersId = users.map((user) => user.id);
     if (!usersId.includes(parseInt(id))) {
       res.sendStatus(404);
@@ -53,7 +65,7 @@ module.exports = {
   },
   delete: (req, res) => {
     const id = req.params.uid;
-    let users = JSON.parse(readFileSync(file, 'utf-8'));
+    let users = getUsers();
     const usersId = users.map((user) => user.id);
     if (!usersId.includes(parseInt(id))) {
       res.sendStatus(404);

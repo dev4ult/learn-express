@@ -6,6 +6,7 @@ const port = 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 const logHelloWorld = (req, res, next) => {
   console.log('Hello World');
@@ -22,7 +23,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-  res.redirect('https://expressjs.com/');
+  res.render('pages/about', {
+    title: 'Halaman about',
+  });
 });
 
 app.use(logHelloWorld);
