@@ -13,7 +13,13 @@
     <% if(users.length > 0) { %>
     <ul>
       <% users.forEach((user) => { %>
-      <li><%= user.nama %> | <%= user.email %> | <a href="/users/detail/<%= user.id %>">detail</a></li>
+      <li>
+        <%= user.nama %> | <%= user.email %> | <a href="/users/detail/<%= user._id %>">detail</a> |
+        <form action="/users?_method=DELETE" method="POST">
+          <input name="id" type="hidden" value="<%= user._id %>" />
+          <button type="submit">delete</button>
+        </form>
+      </li>
       <% }) %>
     </ul>
     <% } else { %>

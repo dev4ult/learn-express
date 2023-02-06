@@ -10,9 +10,15 @@
     <%- include('../components/navbar.ejs') %>
     <fieldset>
       <legend>Detail User</legend>
-      <p><%= name %></p>
+      <p><%= nama %></p>
       <p><%= email %></p>
     </fieldset>
+    <form action="/users/detail?_method=PUT" method="POST">
+      <input type="hidden" name="id" value="<%= _id %>" />
+      <input type="text" name="nama" value="<%= nama %>" />
+      <input type="email" name="email" value="<%= email %>" />
+      <button type="submit">update</button>
+    </form>
     <a href="/users">kembali</a>
   </body>
 </html>
